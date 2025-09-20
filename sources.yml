@@ -1,0 +1,24 @@
+# Example sources.yml
+# Define your data sources and targets here
+
+sources:
+  - name: sample_texts
+    type: text
+    source: sample_docs
+    params:
+      glob: '*.txt'
+    embedding_model: all-MiniLM-L6-v2  # Optional, for future use
+    target:
+      type: file
+      path: output/sample_texts_embedded.json
+
+  - name: sample_web
+    type: web
+    source:
+      - https://example.com
+      - https://langchain.com
+    embedding_model: all-MiniLM-L6-v2
+    target:
+      type: vectordb
+      db_type: chroma
+      path: output/sample_web_chroma

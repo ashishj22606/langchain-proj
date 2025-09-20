@@ -1,0 +1,3 @@
+This is a sample document for the LangChain document loader POC.
+
+You can add more .txt files to this directory to test the loader.
