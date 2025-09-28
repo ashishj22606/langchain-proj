@@ -1,10 +1,9 @@
 import chromadb
-from chromadb.config import Settings
 
 persist_path = "output/sample_web_chroma"
-client = chromadb.Client(Settings(persist_directory=persist_path))
+client = chromadb.PersistentClient(path=persist_path)
 print("Collections:", client.list_collections())
-collection = client.get_collection("rag_collection")
+collection = client.get_or_create_collection("rag_collection")
 
 # Fetch all document IDs
 ids = collection.get()["ids"]

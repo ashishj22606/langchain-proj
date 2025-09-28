@@ -33,7 +33,7 @@ def store_documents(docs, target: dict):
         db_type = target.get('db_type', 'chroma')
         if db_type == 'chroma':
             persist_path = target.get('path', 'output/chroma_db')
-            client = chromadb.Client(Settings(persist_directory=persist_path))
+            client = chromadb.PersistentClient(path=persist_path)
             collection = client.get_or_create_collection(name="rag_collection")
             for i, doc in enumerate(docs):
                 safe_metadata = sanitize_metadata(doc.metadata)
@@ -55,9 +55,13 @@ def process_sources_from_yaml(yaml_path: str):
     for src in config.get('sources', []):
         print(f"[INFO] Processing source: {src['name']}")
         docs = load_documents(src['type'], src['source'], **src.get('params', {}))
+        print(f"[DEBUG] Loaded {len(docs)} docs for source: {src['name']}")
         if 'embedding_model' in src:
+            print(f"[DEBUG] Applying embedding model: {src['embedding_model']}")
             docs = apply_embedding(docs, src['embedding_model'])
+            print(f"[DEBUG] Example embedding: {docs[0].metadata.get('embedding') if docs else 'No docs'}")
         if 'target' in src:
+            print(f"[DEBUG] Storing {len(docs)} docs to target: {src['target']}")
             store_documents(docs, src['target'])
         print(f"[INFO] Finished source: {src['name']}\n")
 
