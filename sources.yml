@@ -7,6 +7,8 @@ sources:
     source: sample_docs
     params:
       glob: '*.txt'
+    chunk_size: 512
+    chunk_overlap: 50
     embedding_model: all-MiniLM-L6-v2  # Optional, for future use
     target:
       type: file
@@ -17,6 +19,8 @@ sources:
     source:
       - https://example.com
       - https://langchain.com
+    chunk_size: 512
+    chunk_overlap: 50
     embedding_model: all-MiniLM-L6-v2
     target:
       type: vectordb
@@ -28,6 +32,8 @@ sources:
     source: sample_docs
     params:
       glob: '*.pdf'
+    chunk_size: 512
+    chunk_overlap: 50
     embedding_model: all-MiniLM-L6-v2
     target:
       type: file

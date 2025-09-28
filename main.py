@@ -6,6 +6,7 @@ import json
 from sentence_transformers import SentenceTransformer
 import chromadb
 from chromadb.config import Settings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def apply_embedding(docs, model_name):
     model = SentenceTransformer(model_name)
@@ -49,6 +50,17 @@ def store_documents(docs, target: dict):
     else:
         print(f"[WARN] Unknown target type: {target_type}")
 
+def chunk_documents(docs, chunk_size=512, chunk_overlap=50):
+    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    chunked_docs = []
+    for doc in docs:
+        chunks = splitter.split_text(doc.page_content)
+        for i, chunk in enumerate(chunks):
+            # Create a new doc for each chunk, preserve metadata
+            new_doc = type(doc)(page_content=chunk, metadata={**doc.metadata, "chunk_id": i})
+            chunked_docs.append(new_doc)
+    return chunked_docs
+
 def process_sources_from_yaml(yaml_path: str):
     with open(yaml_path, 'r') as f:
         config = yaml.safe_load(f)
@@ -58,6 +70,9 @@ def process_sources_from_yaml(yaml_path: str):
         print(f"[DEBUG] Loaded {len(docs)} docs for source: {src['name']}")
         if 'embedding_model' in src:
             print(f"[DEBUG] Applying embedding model: {src['embedding_model']}")
+            chunk_size = src.get('chunk_size', 512)
+            chunk_overlap = src.get('chunk_overlap', 50)
+            docs = chunk_documents(docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
             docs = apply_embedding(docs, src['embedding_model'])
             print(f"[DEBUG] Example embedding: {docs[0].metadata.get('embedding') if docs else 'No docs'}")
         if 'target' in src:
