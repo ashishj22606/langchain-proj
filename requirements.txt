@@ -1,4 +1,5 @@
 langchain
 langchain-community
 tqdm
-bs4
+sentence-transformers
+chromadb

@@ -3,13 +3,21 @@ import yaml
 import os
 from typing import Any
 import json
+from sentence_transformers import SentenceTransformer
+import chromadb
+from chromadb.config import Settings
 
 def apply_embedding(docs, model_name):
-    # Placeholder: Replace with actual embedding logic
-    # For now, just add a dummy embedding field
-    for doc in docs:
-        doc.metadata['embedding'] = f"embedding_with_{model_name}"
+    model = SentenceTransformer(model_name)
+    texts = [doc.page_content for doc in docs]
+    embeddings = model.encode(texts)
+    for doc, emb in zip(docs, embeddings):
+        doc.metadata['embedding'] = emb.tolist()
     return docs
+
+def sanitize_metadata(metadata):
+    # Only allow str, int, float, bool, None
+    return {k: (str(v) if not isinstance(v, (str, int, float, bool, type(None))) else v) for k, v in metadata.items()}
 
 def store_documents(docs, target: dict):
     target_type = target.get('type')
@@ -22,8 +30,22 @@ def store_documents(docs, target: dict):
                 json.dump({'content': doc.page_content, 'metadata': doc.metadata}, f)
                 f.write('\n')
     elif target_type == 'vectordb':
-        # Placeholder: Add logic for vector DB storage
-        print(f"[INFO] Would store {len(docs)} docs in vector DB at {target.get('path')}")
+        db_type = target.get('db_type', 'chroma')
+        if db_type == 'chroma':
+            persist_path = target.get('path', 'output/chroma_db')
+            client = chromadb.Client(Settings(persist_directory=persist_path))
+            collection = client.get_or_create_collection(name="rag_collection")
+            for i, doc in enumerate(docs):
+                safe_metadata = sanitize_metadata(doc.metadata)
+                collection.add(
+                    embeddings=[doc.metadata['embedding']],
+                    documents=[doc.page_content],
+                    ids=[str(i)],
+                    metadatas=[safe_metadata]
+                )
+            print(f"[INFO] Stored {len(docs)} docs in ChromaDB at {persist_path}")
+        else:
+            print(f"[WARN] Unknown vector DB type: {db_type}")
     else:
         print(f"[WARN] Unknown target type: {target_type}")
 
