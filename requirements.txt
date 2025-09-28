@@ -1,1 +1,4 @@
 langchain
+langchain-community
+tqdm
+bs4

@@ -23,3 +23,9 @@ This project demonstrates a modular approach to using LangChain's document loade
 
 ## Integration
 The code is structured to allow easy import of the document loader module into other ETL pipelines or frameworks.
+
+## To install packages in venv
+```
+source ./.venv/Scripts/activate
+py -m pip install --no-cache-dir -r requirements.txt
+```

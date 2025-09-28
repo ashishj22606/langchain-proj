@@ -1,5 +1,5 @@
 from loader_registry import LOADER_REGISTRY, register_loader
-from langchain.document_loaders import DirectoryLoader, TextLoader, UnstructuredPDFLoader, WebBaseLoader, CSVLoader, JSONLoader
+from langchain_community.document_loaders import DirectoryLoader, TextLoader, UnstructuredPDFLoader, WebBaseLoader, CSVLoader, JSONLoader
 from typing import List, Any
 from langchain.schema import Document
 
