@@ -29,3 +29,6 @@ The code is structured to allow easy import of the document loader module into o
 source ./.venv/Scripts/activate
 py -m pip install --no-cache-dir -r requirements.txt
 ```
+
+![alt text](architecture/arch.png)
+![alt text](architecture/arch-1.png)
