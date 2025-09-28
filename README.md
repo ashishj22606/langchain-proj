@@ -28,6 +28,7 @@ The code is structured to allow easy import of the document loader module into o
 ```
 source ./.venv/Scripts/activate
 py -m pip install --no-cache-dir -r requirements.txt
+export PATH=$PATH:/c/Users/jain2/Downloads/Release-25.07.0-0/poppler-25.07.0/Library/bin
 ```
 
 ![alt text](architecture/arch.png)

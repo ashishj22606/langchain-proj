@@ -3,3 +3,15 @@ langchain-community
 tqdm
 sentence-transformers
 chromadb
+unstructured
+pdfminer.six
+pi-heif
+unstructured_inference
+pdf2image
+# External dependency required for PDF processing:
+# Download Poppler for Windows: https://github.com/oschwartz10612/poppler-windows/releases/
+# Add the path to poppler/bin to your system PATH environment variable.
+# Install https://github.com/UB-Mannheim/tesseract/wiki
+# export PATH=$PATH:/c/Program\ Files/Tesseract-OCR
+pytesseract
+unstructured_pytesseract

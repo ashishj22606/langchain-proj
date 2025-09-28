@@ -22,3 +22,13 @@ sources:
       type: vectordb
       db_type: chroma
       path: output/sample_web_chroma
+
+  - name: sample_pdfs
+    type: pdf
+    source: sample_docs
+    params:
+      glob: '*.pdf'
+    embedding_model: all-MiniLM-L6-v2
+    target:
+      type: file
+      path: output/sample_pdfs_embedded.json
